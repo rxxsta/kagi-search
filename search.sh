@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#set -v
+
 # Usage check
 if [[ -z "$1" ]]; then
     echo "Need to query something"
@@ -40,7 +42,7 @@ json_result=$(curl "https://kagi.com/mother/context?q=$query" \
   --output - | tr -d '\0')
 
 # Parse JSON from streamed response
-json_result=$(echo $json_result | cut -d ' ' -f 2- | cut -d ':' -f 2- | tail -1)
+json_result="${json_result##*new_message.json:}"
 
 # Check for auth error
 if [[ $(echo -n $json_result | jq '.error' 2>/dev/null) == "unauthorized" ]]; then
