@@ -1,17 +1,24 @@
 #!/bin/bash
 
-#set -v
-
 # Usage check
 if [[ -z "$1" ]]; then
     echo "Need to query something"
     exit 1
 fi
 
+
+# Accept quoted single arg or multiple unquoted args
+if [ "$#" -eq 1 ]; then
+    input="$1"
+else
+    input="$*"
+fi
+
 # Strip surrounding quotes and trailing question mark
-input="${1#[\"\']}"
+input="${input#[\"\']}"
 input="${input%[\"\']}"
 input="${input%%\?*( )}"
+
 # URL encode query
 query=$(printf '%s' "$input" | jq -sRr @uri)
 
